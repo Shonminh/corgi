@@ -28,6 +28,7 @@ sh corgi.sh
 |jdk|deb|:ballot_box_with_check:|
 |maven|tar package|:ballot_box_with_check:|
 |chromium-browser|deb|:ballot_box_with_check:|
+|gradle|zip package|:ballot_box_with_check:|
 
 
 
