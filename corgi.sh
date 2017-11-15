@@ -40,7 +40,11 @@ main() {
     home_dir=$HOME
     user=`printf ${home_dir}|awk -F "/" '{print $(split($0, a))}'`
     corgi_dir=${home_dir}/.corgi_repository
+    corgi_rc_file=${home_dir}/.corgi_rc
     mkdir -p ${corgi_dir}
+
+    mkdir -p ${corgi_rc_file}
+
 
 
     sudo rm /var/lib/apt/lists/lock
@@ -134,7 +138,7 @@ main() {
         cd /usr/local
         sudo ln -s apache-maven-3.5.2 maven
         cd -
-        echo -e 'MAVEN_HOME=/usr/local/maven\nPATH=${MAVEN_HOME}/bin:${PATH}' >> ${home_dir}/.zshrc
+        echo -e 'MAVEN_HOME=/usr/local/maven\nPATH=${MAVEN_HOME}/bin:${PATH}' >> ${corgi_rc_file}
         printf "${GREEN}maven install success...${NORMAL}\n"
     else
         printf "${YELLOW}maven exists...${NORMAL}\n"
@@ -145,12 +149,35 @@ main() {
 
 
 
+    ##install gradle 3.4.1
+    wget https://services.gradle.org/distributions/gradle-3.4.1-bin.zip
+    sudo mkdir -p /opt/gradle
+    sudo unzip -d /opt/gradle gradle-3.4.1-bin.zip
+    echo 'PATH=${PATH}:/opt/gradle/gradle-3.4.1/bin' >> ${corgi_rc_file}
+    source ${corgi_rc_file}
+
+    if [[ `gradle -v | grep -c "Build time"` -eq 1 ]];then
+        printf "${GREEN}gradle install success......${NORMAL}\n"
+    else
+        printf "${YELLOW}gradle install failed......${NORMAL}\n"
+    fi
+
+
+#############################################################################
+##ending...
+#############################################################################
+
     sudo rm -r ${corgi_dir}
 
 
 
     chown -R ${user}:${user} ${home_dir}/.zsh*
     chown -R ${user}:${user} ${home_dir}/.oh-my-zsh
+    chown -R ${user}:${user} ${corgi_rc_file}
+
+
+    echo "source ${corgi_rc_file}" >> ${home_dir}/.bashrc
+    echo "source ${corgi_rc_file}" >> ${home_dir}/.zshrc
 
 
     echo "${BLUE}corgi init finished...${NORMAL}${GREEN}"
