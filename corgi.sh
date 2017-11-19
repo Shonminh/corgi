@@ -54,7 +54,7 @@ main() {
     sudo apt-get upgrade
 
     sudo apt-get install wget -y
-    sudo apt-get install curl
+    sudo apt-get install curl -y
 
     ##install vim
     sudo apt-get install vim -y
@@ -80,7 +80,7 @@ main() {
     ##install git
 
     ##ubuntu 14.04
-    sudo apt-get install software-properties-common
+    sudo apt-get install software-properties-common -y
 
     sudo apt-add-repository ppa:git-core/ppa -y
     sudo apt-get update
@@ -92,7 +92,12 @@ main() {
     ##install teamviewer
     is_install=`dpkg -l teamviewer 2>&1 > /dev/null`
     if [ ! $? -eq 0 ];then
-        teamviewer_deb="teamviewer_i386.deb"
+        if [ `uname -m` == "x86_64" ];then
+            teamviewer_deb="teamviewer_amd64.deb"
+        else
+            teamviewer_deb="teamviewer_i386.deb"
+        fi
+
         wget https://download.teamviewer.com/download/${teamviewer_deb} -P ${corgi_dir}&& \
         sudo dpkg -i ${corgi_dir}/${teamviewer_deb} && apt-get install -f
 
@@ -133,7 +138,7 @@ main() {
     result=`mvn -v 2>&1 > /dev/null`
     if [ ! $? -eq 0 ]; then
         maven_package="apache-maven-3.5.2-bin.tar.gz"
-        wget http://mirrors.viethosting.vn/apache/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz -P ${corgi_dir}
+        wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.5.2/binaries/apache-maven-3.5.2-bin.tar.gz -P ${corgi_dir}
         sudo tar -zxvf ${corgi_dir}/${maven_package} -C /usr/local > /dev/null
         cd /usr/local
         sudo ln -s apache-maven-3.5.2 maven

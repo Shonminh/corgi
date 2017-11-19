@@ -12,6 +12,17 @@ Run script.
 sh corgi.sh
 ```
 
+#### Using Docker for tests
+
+You can run the tests in a Docker container to guarantee a clean test environment.
+
+```bash
+docker build -t corgi:v1 .
+docker run --rm -it corgi:v1
+```
+
+
+
 ## Installed packages
 
 
